@@ -5,13 +5,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.stereotype.Service;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.wha.springmvc.dao.UserDAO;
 import com.wha.springmvc.model.User;
 
 @Service("userService")
-public class UserServiceImpl implements UserService{
+@Transactional
+public class UserServiceImpl implements UserService
+{
+	@Autowired
+	private UserDAO dao;
 	
+	/*
 	private static final AtomicLong counter = new AtomicLong();
 	
 	private static List<User> users;
@@ -19,63 +29,57 @@ public class UserServiceImpl implements UserService{
 	static{
 		users= populateDummyUsers();
 	}
-
-	public List<User> findAllUsers() {
-		return users;
-	}
-	
-	public User findById(long id) {
-		for(User user : users){
-			if(user.getId() == id){
-				return user;
-			}
-		}
-		return null;
+	 */
+	public List<User> findAllUsers()
+	{
+		return dao.findAllUsers();
 	}
 	
 	public User findByName(String name) {
-		for(User user : users){
-			if(user.getUsername().equalsIgnoreCase(name)){
-				return user;
-			}
-		}
-		return null;
+		return dao.findByName(name);
 	}
 	
-	public void saveUser(User user) {
-		user.setId(counter.incrementAndGet());
-		users.add(user);
+	public void saveUser(User user)
+	{
+		dao.save(user);
 	}
 
-	public void updateUser(User user) {
-		int index = users.indexOf(user);
-		users.set(index, user);
-	}
-
-	public void deleteUserById(long id) {
-		
-		for (Iterator<User> iterator = users.iterator(); iterator.hasNext(); ) {
-		    User user = iterator.next();
-		    if (user.getId() == id) {
-		        iterator.remove();
-		    }
+	public void updateUser(User user)
+	{
+		User entity = dao.findById((int)user.getId());
+		if(entity != null)
+		{
+			entity.setUsername(user.getUsername());
+			entity.setAddress(user.getAddress());
+			entity.setEmail(user.getEmail());
 		}
+		dao.save(entity);
 	}
 
-	public boolean isUserExist(User user) {
+
+	public boolean isUserExist(User user)
+	{
 		return findByName(user.getUsername())!=null;
 	}
 	
-	public void deleteAllUsers(){
-		users.clear();
+	public void deleteAllUsers()
+	{
+		dao.deleteAllusers();
 	}
 
-	private static List<User> populateDummyUsers(){
-		List<User> users = new ArrayList<User>();
-		users.add(new User(counter.incrementAndGet(),"Sam", "PARIS", "sam@abc.com"));
-		users.add(new User(counter.incrementAndGet(),"wajih", "rue albert 1er COLOMBES", "wajih@formation.com"));
-		users.add(new User(counter.incrementAndGet(),"Tomy", "ALBAMA", "tomy@abc.com"));
-		return users;
+
+	@Override
+	public User findById(long id)
+	{
+		
+		return dao.findById((int)id);
+	}
+
+
+	@Override
+	public void deleteUserById(long id)
+	{
+		dao.deleteUserById((int)id);		
 	}
 
 }

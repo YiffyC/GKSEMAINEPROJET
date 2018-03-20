@@ -33,7 +33,6 @@ public class JPAConfiguration
 	public DataSource dataSource()
 	{
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(environement.getRequiredProperty("jdbc.url"));
 		dataSource.setDriverClassName(environement.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environement.getRequiredProperty("jdbc.url"));
 		dataSource.setUsername(environement.getRequiredProperty("jdbc.username"));
@@ -67,7 +66,7 @@ public class JPAConfiguration
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", environement.getRequiredProperty("hibernate.dialect"));
 		//Autogen
-		//properties.put("hibernate.hbm2ddl.auto", environement.getRequiredProperty("hibernate.hbm2ddl.auto"));
+		properties.put("hibernate.hbm2ddl.auto", environement.getRequiredProperty("hibernate.hbm2ddl.auto"));
 		properties.put("hibernate.show_sql", environement.getRequiredProperty("hibernate.show_sql"));
 		properties.put("hibernate.format_sql", environement.getRequiredProperty("hibernate.show_sql"));
 		

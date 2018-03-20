@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import com.wha.springmvc.model.User;
+import org.springframework.stereotype.Repository;
 
+import com.wha.springmvc.model.User;
+@Repository("userDao")
 public class UserDaoImpl extends AbstractDAO<Integer, User> implements UserDAO
 {
 
